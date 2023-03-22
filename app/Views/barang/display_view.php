@@ -8,18 +8,18 @@
                 <div class="card h-100">
                     <img src="<?= base_url('barang/' . $b['gambar_barang']) ?>" class="img-medium" alt="gambar barang">
                     <div class="card-body">
-                        <h4 class="card-title">
+                        <h5 class="card-title">
                             <span class="badge bg-primary"><?= $b['nama_barang'] ?></span>
-                        </h4>
+                        </h5>
                         <table class="table table-borderless">
                             <tr>
-                                <td style="width: 15%">Stok</td>
+                                <td style="width: 10%; font-size:14px">Stok</td>
                                 <td>: 
                                     <span class="badge bg-success"><?= $b['stok_barang'] ?></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 15%">Harga</td>
+                                <td style="width: 10%; font-size:14px">Harga</td>
                                 <td>:
                                     <span class="badge bg-secondary">Rp<?= $b['harga_barang'] ?></span>
                                 </td>
@@ -35,8 +35,9 @@
 <style>
     .img-medium {
         width: 286px;
-        height: 250px;
+        height: 150px;
         object-fit: cover;
+        max-width: 100%;
     }
 </style>
 <?= $this->endSection(); ?>
