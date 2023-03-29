@@ -29,6 +29,13 @@
             </li>
 
             <li class="">
+                <a href="/keranjang">
+                    <i class='bx bx-home icon'></i>
+                    <span class="text nav-text">Keranjang</span>
+                </a>
+            </li>
+
+            <li class="">
                 <a href="/barang/create">
                     <i class='bx bxs-package icon'></i>
                     <span class="text nav-text">Create</span>

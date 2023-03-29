@@ -25,6 +25,11 @@
                                 </td>
                             </tr>
                         </table>
+                        <div class="input-group mt-3">
+                            <span class="input-group-text" style="max-width: 60px; font-size: 12px; justify-content: center;">Jumlah</span>
+                            <input type="number" name="jumlah" class="form-control" style="max-width: 70px; font-size: 12px;" value="1" min="1" max="<?= $b['stok_barang'] ?>">
+                        </div>
+                        <a href="<?= base_url('keranjang/tambah/' . $b['id_barang']) ?>?jumlah=" class="btn btn-primary btn-tambah float-end" style="max-width: 60px; font-size: 12px">Add</a>
                     </div>
                 </div>
             </div>
@@ -40,4 +45,16 @@
         max-width: 100%;
     }
 </style>
+
+<script>
+    $(document).ready(function() {
+        $('.btn-tambah').click(function(event) {
+            event.preventDefault();
+            var jumlah = $(this).closest('.card-body').find('input[name="jumlah"]').val();
+            var href = $(this).attr('href');
+            $(this).attr('href', href + jumlah);
+            window.location.href = href + jumlah;
+        });
+    });
+</script>
 <?= $this->endSection(); ?>

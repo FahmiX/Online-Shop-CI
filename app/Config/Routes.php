@@ -34,6 +34,14 @@ $routes->get('/barang', 'BarangController::display');
 $routes->get('/barang/create', 'BarangController::create');
 $routes->post('/barang/store', 'BarangController::store');
 
+// display keranjang
+$routes->get('/keranjang', 'KeranjangController::display');
+// tambah keranjang
+$routes->get('/keranjang/tambah/(:num)', 'KeranjangController::tambah/$1');
+// hapus keranjang
+$routes->get('/keranjang/hapus/(:num)', 'KeranjangController::hapus/$1');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
