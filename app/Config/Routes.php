@@ -40,7 +40,12 @@ $routes->get('/keranjang', 'KeranjangController::display');
 $routes->get('/keranjang/tambah/(:num)', 'KeranjangController::tambah/$1');
 // hapus keranjang
 $routes->get('/keranjang/hapus/(:num)', 'KeranjangController::hapus/$1');
-
+// ubah keranjang
+$routes->post('/keranjang/ubah/', 'KeranjangController::ubah');
+// checkout
+$routes->get('/keranjang/checkout', 'KeranjangController::checkout');
+// validasi checkout
+$routes->post('/keranjang/checkout/validasi', 'KeranjangController::validasi');
 
 /*
  * --------------------------------------------------------------------

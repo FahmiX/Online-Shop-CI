@@ -1,0 +1,19 @@
+th {
+    text-align: center;
+    background-color: #424874 !important;
+    color: white !important;
+}
+
+.table-custom tbody tr:nth-child(even) {
+    background-color: #DCD6F7;
+}
+
+.table-custom tbody tr:nth-child(odd) {
+    background-color: #F4EEFF;
+}
+
+.img-medium {
+    width: 100%;
+    height: auto;
+}
+
