@@ -140,7 +140,7 @@ class KeranjangController extends BaseController
         return view('keranjang/checkout_view', ['keranjang' => $keranjang]);
     }
 
-    public function validasi()
+    public function preview()
     {
         // Ambil data keranjang dari session
         $keranjang = session()->get('keranjang');
@@ -150,6 +150,15 @@ class KeranjangController extends BaseController
             session()->setFlashdata('error_message', 'Keranjang kosong, silahkan tambahkan barang terlebih dahulu');
             return redirect()->to('/keranjang');
         }
+
+        // Ambil data identitas pembeli dari form
+        $pembeli = [
+            'nama' => $this->request->getVar('nama'),
+            'hp' => $this->request->getVar('hp'),
+            'alamat' => $this->request->getVar('alamat'),
+            'kecamatan' => $this->request->getVar('kecamatan'),
+            'kota' => $this->request->getVar('kota')
+        ];
 
         // Validasi data identitas pembeli
         $validationRules = [
@@ -166,7 +175,21 @@ class KeranjangController extends BaseController
             return redirect()->to('/keranjang/checkout')->withInput()->with('validation', $validation);
         }
 
-        // Jika data keranjang dan identitas pembeli valid, lanjutkan ke halaman preview
-        return redirect()->to('/keranjang/preview_view');
+        // Jika data keranjang dan identitas pembeli valid, lanjutkan ke halaman preview dengan data pembeli
+
+        return view('keranjang/preview_view', ['keranjang' => $keranjang, 'pembeli' => $pembeli]);
     }
+
+    // public function preview()
+    // {
+    //     $keranjang = session()->get('keranjang');
+
+    //     dd($keranjang);
+
+    //     if (empty($keranjang)) {
+    //         return redirect()->back()->with('warning', 'Keranjang belanja masih kosong.');
+    //     }
+
+    //     return view('keranjang/preview_view', ['keranjang' => $keranjang]);
+    // }
 }

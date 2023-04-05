@@ -44,8 +44,8 @@ $routes->get('/keranjang/hapus/(:num)', 'KeranjangController::hapus/$1');
 $routes->post('/keranjang/ubah/', 'KeranjangController::ubah');
 // checkout
 $routes->get('/keranjang/checkout', 'KeranjangController::checkout');
-// validasi checkout
-$routes->post('/keranjang/checkout/validasi', 'KeranjangController::validasi');
+// preview checkout
+$routes->post('/keranjang/checkout/preview', 'KeranjangController::preview');
 
 /*
  * --------------------------------------------------------------------

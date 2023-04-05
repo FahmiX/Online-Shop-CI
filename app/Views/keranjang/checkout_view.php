@@ -4,7 +4,7 @@
 
 <!-- Create Form untuk pengisian Identitas Pembeli -->
 <div class="container create-container">
-    <form action="<?= route_to('keranjang/checkout/validasi') ?>" method="post" enctype="multipart/form-data">
+    <form action="<?= route_to('keranjang/checkout/preview') ?>" method="post" enctype="multipart/form-data">
         <?= csrf_field() ?>
 
         <?php if (session()->getFlashdata('error_message')) : ?>
