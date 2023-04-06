@@ -46,6 +46,17 @@ $routes->post('/keranjang/ubah/', 'KeranjangController::ubah');
 $routes->get('/keranjang/checkout', 'KeranjangController::checkout');
 // preview checkout
 $routes->post('/keranjang/checkout/preview', 'KeranjangController::preview');
+// bayar checkout
+$routes->get('/keranjang/checkout/bayar', 'KeranjangController::bayar');
+// invoice checkout
+$routes->get('/keranjang/checkout/invoice', 'KeranjangController::invoice');
+
+// display transaksi
+$routes->get('/transaksi', 'TransaksiController::display');
+// display transaksi detail
+$routes->get('/transaksi/detail/(:num)', 'TransaksiController::detail/$1');
+// hapus transaksi
+$routes->get('/transaksi/hapus/(:num)', 'TransaksiController::hapus/$1');
 
 /*
  * --------------------------------------------------------------------

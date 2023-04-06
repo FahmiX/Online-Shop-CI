@@ -6,7 +6,15 @@
 <link rel="stylesheet" type="text/css" href="/styles/keranjang_display.css">
 
 <div class="container mt-4 mb-4">
-    <h3>Keranjang Belanja</h3>
+    <h3 style="text-align: center;">Keranjang Belanja</h3>
+    <br>
+
+    <?php if (session()->getFlashdata('error_message')) : ?>
+        <div class="alert alert-danger" role="alert">
+            <?= session()->getFlashdata('error_message') ?>
+        </div>
+    <?php endif; ?>
+
     <table class="table table-custom table-bordered border-dark border-5">
         <thead class="align-middle">
             <tr>
@@ -36,7 +44,7 @@
                             <button class="btn btn-outline-secondary btn-tambah" type="button" data-id="<?= $k['id_barang'] ?>" data-action="tambah">+</button>
                         </div>
                     </td>
-                    <td >Rp<?= number_format($k['harga_barang'], 0, ',', '.') ?></td>
+                    <td>Rp<?= number_format($k['harga_barang'], 0, ',', '.') ?></td>
                     <td id="subtotal-harga-<?= $k['id_barang'] ?>">Rp<?= number_format($k['jumlah'] * $k['harga_barang'], 0, ',', '.') ?></td>
                     <td style="width: 50px">
                         <a href="<?= base_url('keranjang/hapus/' . $k['id_barang']) ?>" class="btn btn-danger btn-sm">Hapus</a>

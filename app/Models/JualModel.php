@@ -4,10 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class BarangModel extends Model
+class JualModel extends Model
 {
-    protected $table            = 'barang';
-    protected $primaryKey       = 'id_barang';
+    protected $table            = 'jual';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
@@ -39,13 +38,13 @@ class BarangModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getAllBarang()
+    public function getAllJual()
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("SELECT * FROM barang");
+        $query = $db->query("SELECT * FROM jual");
 
         // Close Connection
         $db->close();
@@ -54,32 +53,59 @@ class BarangModel extends Model
         return $query->getResultArray();
     }
 
-    public function getBarang($id_barang)
+    public function getJual($id_barang, $id_transaksi)
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("SELECT * FROM barang WHERE id_barang = $id_barang");
+        $query = $db->query("SELECT * FROM jual WHERE id_barang = $id_barang AND id_transaksi = $id_transaksi");
 
         // Close Connection
         $db->close();
 
         // Return result
-        return $query->getRowArray();
+        return $query->getResultArray();
     }
 
-    public function createBarang($data)
+    public function getJualByBarang($id_barang)
     {
         // Connect to database
         $db = db_connect();
 
-        // set ID
-        $id_barang = $db->query("SELECT MAX(id_barang) AS id_barang FROM barang")->getRowArray()['id_barang'] + 1;
+        // Query
+        $query = $db->query("SELECT * FROM jual WHERE id_barang = $id_barang");
+
+        // Close Connection
+        $db->close();
+
+        // Return result
+        return $query->getResultArray();
+    }
+
+    public function getJualByTransaksi($id_transaksi)
+    {
+        // Connect to database
+        $db = db_connect();
 
         // Query
-        // id_barang, nama_barang, stok_barang, harga_barang, gambar_barang
-        $query = $db->query("INSERT INTO barang VALUES ($id_barang, '{$data['nama_barang']}', {$data['stok_barang']}, {$data['harga_barang']}, '{$data['gambar_barang']}')");
+        $query = $db->query("SELECT * FROM jual WHERE id_transaksi = $id_transaksi");
+
+        // Close Connection
+        $db->close();
+
+        // Return result
+        return $query->getResultArray();
+    }
+
+    public function insertJual($data)
+    {
+        // Connect to database
+        $db = db_connect();
+
+        // Query
+        // id_barang, id_transaksi, jumlah_jual, harga_jual
+        $query = $db->query("INSERT INTO jual VALUES ($data[id_barang], $data[id_transaksi], $data[jumlah_jual], $data[harga_jual])");
 
         // Close Connection
         $db->close();
@@ -88,13 +114,13 @@ class BarangModel extends Model
         return $query;
     }
 
-    public function kurangiStok($id_barang, $jumlah)
+    public function deleteJualByTransaksi($id_transaksi)
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("UPDATE barang SET stok_barang = stok_barang - $jumlah WHERE id_barang = $id_barang");
+        $query = $db->query("DELETE FROM jual WHERE id_transaksi = $id_transaksi");
 
         // Close Connection
         $db->close();

@@ -6,15 +6,22 @@
 <link rel="stylesheet" type="text/css" href="/styles/barang_display.css">
 
 <div class="container mt-4 mb-4">
+
+    <?php if (session()->getFlashdata('success')) : ?>
+        <div class="alert alert-success" role="alert">
+            <?= session()->getFlashdata('success'); ?>
+        </div>
+    <?php endif; ?>
+
     <div class="row row-cols-md-4 g-5">
         <?php foreach ($barang as $b) : ?>
             <div class="col">
                 <div class="card card-container">
                     <img src="<?= base_url('barang/' . $b['gambar_barang']) ?>" class="img-medium card-img-top " alt="gambar barang">
-                        <div class="card-header">
-                            <span class="badge bg-primary"><?= $b['nama_barang'] ?></span>
-                        </div>
-                        <div class="card-body">
+                    <div class="card-header">
+                        <span class="badge bg-primary"><?= $b['nama_barang'] ?></span>
+                    </div>
+                    <div class="card-body">
                         <table class="table table-borderless">
                             <tr class="align-middle">
                                 <td style="width: 10%; font-size:14px">Stok</td>

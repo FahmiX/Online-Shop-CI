@@ -20,7 +20,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <label>Nama</label>
-                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('nama') ? 'is-invalid' : ''; ?>" name="nama" value="<?= old('nama'); ?>" required>
+                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('nama') ? 'is-invalid' : ''; ?>" name="nama" value="<?= old('nama', $pembeli['nama']); ?>" required>
                     <?php if (isset($validation) && $validation->hasError('nama')) : ?>
                         <div class="invalid-feedback">
                             <?= $validation->getError('nama'); ?>
@@ -31,7 +31,7 @@
                 <!-- HP -->
                 <div class="form-group">
                     <label>HP</label>
-                    <input type="number" class="form-control <?= isset($validation) && $validation->hasError('hp') ? 'is-invalid' : ''; ?>" name="hp" value="<?= old('hp'); ?>" required>
+                    <input type="number" class="form-control <?= isset($validation) && $validation->hasError('hp') ? 'is-invalid' : ''; ?>" name="hp" value="<?= old('hp', $pembeli['hp']); ?>" required>
                     <?php if (isset($validation) && $validation->hasError('hp')) : ?>
                         <div class="invalid-feedback">
                             <?= $validation->getError('hp'); ?>
@@ -42,7 +42,7 @@
                 <!-- Alamat -->
                 <div class="form-group">
                     <label>Alamat</label>
-                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('alamat') ? 'is-invalid' : ''; ?>" name="alamat" value="<?= old('alamat'); ?>" required>
+                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('alamat') ? 'is-invalid' : ''; ?>" name="alamat" value="<?= old('alamat', $pembeli['alamat']); ?>" required>
                     <?php if (isset($validation) && $validation->hasError('alamat')) : ?>
                         <div class="invalid-feedback">
                             <?= $validation->getError('alamat'); ?>
@@ -53,7 +53,7 @@
                 <!-- Kecamatan -->
                 <div class="form-group">
                     <label>Kecamatan</label>
-                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('kecamatan') ? 'is-invalid' : ''; ?>" name="kecamatan" value="<?= old('kecamatan'); ?>" required>
+                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('kecamatan') ? 'is-invalid' : ''; ?>" name="kecamatan" value="<?= old('kecamatan', $pembeli['kecamatan']); ?>" required>
                     <?php if (isset($validation) && $validation->hasError('kecamatan')) : ?>
                         <div class="invalid-feedback">
                             <?= $validation->getError('kecamatan'); ?>
@@ -64,7 +64,7 @@
                 <!-- Kota -->
                 <div class="form-group">
                     <label>Kota</label>
-                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('kota') ? 'is-invalid' : ''; ?>" name="kota" value="<?= old('kota'); ?>" required>
+                    <input type="text" class="form-control <?= isset($validation) && $validation->hasError('kota') ? 'is-invalid' : ''; ?>" name="kota" value="<?= old('kota', $pembeli['kota']); ?>" required>
                     <?php if (isset($validation) && $validation->hasError('kota')) : ?>
                         <div class="invalid-feedback">
                             <?= $validation->getError('kota'); ?>

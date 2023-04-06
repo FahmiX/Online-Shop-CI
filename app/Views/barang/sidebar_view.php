@@ -27,15 +27,22 @@
         <div class="top-content">
             <li class="">
                 <a href="/">
-                    <i class='bx bx-home icon'></i>
-                    <span class="text nav-text">Home</span>
+                    <i class='bx bxs-package icon'></i>
+                    <span class="text nav-text">Barang</span>
                 </a>
             </li>
 
             <li class="">
                 <a href="/keranjang">
-                    <i class='bx bx-home icon'></i>
+                    <i class='bx bx-cart icon'></i>
                     <span class="text nav-text">Keranjang</span>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="/transaksi">
+                    <i class='bx bx-credit-card icon'></i>
+                    <span class="text nav-text">Transaksi</span>
                 </a>
             </li>
 
@@ -66,7 +73,7 @@
 <div class="home">
     <div class="text">
         <script src="/scripts/navbar.js"></script>
-        
+
         <?= $this->renderSection('content') ?>
     </div>
 </div>

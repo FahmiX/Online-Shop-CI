@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\BarangModel;
+use App\Models\TransaksiModel;
+use App\Models\JualModel;
 
 class KeranjangController extends BaseController
 {
@@ -25,8 +27,14 @@ class KeranjangController extends BaseController
         $barang = $barangModel->find($id_barang);
         $jumlah = 1;
 
+        // cek id barang
         if (empty($barang)) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Barang dengan ID ' . $id_barang . ' tidak ditemukan.');
+            return redirect()->to('/barang');
+        }
+
+        // cek stok barang
+        if ($barang['stok_barang'] < $jumlah) {
+            return redirect()->to('/barang');
         }
 
         // Ambil data keranjang dari session
@@ -62,7 +70,8 @@ class KeranjangController extends BaseController
         // Simpan data keranjang ke session
         session()->set('keranjang', $keranjang);
 
-        return redirect()->back()->with('success', 'Barang berhasil ditambahkan ke keranjang.');
+        //kembali ke halaman home 
+        return redirect()->to('/')->with('success', 'Barang berhasil ditambahkan ke keranjang.');
     }
 
     public function hapus($id_barang)
@@ -131,13 +140,27 @@ class KeranjangController extends BaseController
 
     public function checkout()
     {
+        // Ambil data keranjang dari session
         $keranjang = session()->get('keranjang');
 
         if (empty($keranjang)) {
-            return redirect()->back()->with('warning', 'Keranjang belanja masih kosong.');
+            return redirect()->back()->with('error_message', 'Keranjang belanja masih kosong.');
         }
 
-        return view('keranjang/checkout_view', ['keranjang' => $keranjang]);
+        // Ambil data identitas pembeli dari session jika sudah ada
+        if (session()->has('pembeli')) {
+            $pembeli = session()->get('pembeli');
+        } else {
+            $pembeli = [
+                'nama' => '',
+                'hp' => '',
+                'alamat' => '',
+                'kecamatan' => '',
+                'kota' => ''
+            ];
+        }
+
+        return view('keranjang/checkout_view', ['pembeli' => $pembeli]);
     }
 
     public function preview()
@@ -175,21 +198,103 @@ class KeranjangController extends BaseController
             return redirect()->to('/keranjang/checkout')->withInput()->with('validation', $validation);
         }
 
-        // Jika data keranjang dan identitas pembeli valid, lanjutkan ke halaman preview dengan data pembeli
+        // Jika identitas pembeli valid, maka masukkan data pembeli ke session
+        session()->set('pembeli', $pembeli);
 
-        return view('keranjang/preview_view', ['keranjang' => $keranjang, 'pembeli' => $pembeli]);
+        // Tambahkan total harga 
+        $total = 0;
+        foreach ($keranjang as $k) {
+            $total += $k['jumlah'] * $k['harga_barang'];
+        }
+
+        // Jika data keranjang dan identitas pembeli valid, lanjutkan ke halaman preview dengan data pembeli
+        return view('keranjang/preview_view', ['keranjang' => $keranjang, 'pembeli' => $pembeli, 'total' => $total]);
     }
 
-    // public function preview()
-    // {
-    //     $keranjang = session()->get('keranjang');
+    public function bayar()
+    {
+        // Ambil data keranjang dari session
+        $keranjang = session()->get('keranjang');
 
-    //     dd($keranjang);
+        // Validasi jika data keranjang kosong
+        if (empty($keranjang)) {
+            session()->setFlashdata('error_message', 'Keranjang kosong, silahkan tambahkan barang terlebih dahulu');
+            return redirect()->to('/keranjang');
+        }
 
-    //     if (empty($keranjang)) {
-    //         return redirect()->back()->with('warning', 'Keranjang belanja masih kosong.');
-    //     }
+        // Ambil data identitas pembeli dari session
+        $pembeli = session()->get('pembeli');
 
-    //     return view('keranjang/preview_view', ['keranjang' => $keranjang]);
-    // }
+        // Validasi jika data identitas pembeli kosong
+        if (empty($pembeli)) {
+            session()->setFlashdata('error_message', 'Data identitas pembeli tidak lengkap');
+            return redirect()->to('/keranjang/checkout');
+        }
+
+        // Tambahkan total harga
+        $total = 0;
+        foreach ($keranjang as $k) {
+            $total += $k['jumlah'] * $k['harga_barang'];
+        }
+
+        // Simpan data transaksi ke database
+        $transaksi = new TransaksiModel();
+
+        // data_transaksi terdiri dari id_transaksi, tanggal_transaksi, nama, hp, alamat, kecamatan, kota, total_transaksi
+        $data_transaksi = [
+            'tanggal_transaksi' => date('Y-m-d H:i:s'),
+            'nama' => $pembeli['nama'],
+            'hp' => $pembeli['hp'],
+            'alamat' => $pembeli['alamat'],
+            'kecamatan' => $pembeli['kecamatan'],
+            'kota' => $pembeli['kota'],
+            'total_transaksi' => $total
+        ];
+
+        // Simpan data transaksi dan dapatkan id_transaksi
+        $id_transaksi = $transaksi->insertTransaksi($data_transaksi);
+
+        // Simpan data jual berupa id_transaksi, id_barang, jumlah_jual, harga_jual
+        $jual = new JualModel();
+
+        foreach ($keranjang as $k) {
+            $data_jual = [
+                'id_transaksi' => $id_transaksi,
+                'id_barang' => $k['id_barang'],
+                'jumlah_jual' => $k['jumlah'],
+                'harga_jual' => $k['harga_barang']
+            ];
+
+            $jual->insertJual($data_jual);
+        }
+
+        // Hapus data keranjang dan identitas pembeli dari session
+        session()->remove('keranjang');
+        session()->remove('pembeli');
+
+        // Kurangi stok barang
+        $barang = new BarangModel();
+
+        foreach ($keranjang as $k) {
+            $barang->kurangiStok($k['id_barang'], $k['jumlah']);
+        }
+
+        $data = [
+            'keranjang' => $keranjang,
+            'pembeli' => $pembeli,
+            'total' => $total
+        ];
+
+        session()->set('data', $data);
+
+        // Tampilkan halaman pembayaran
+        return redirect()->to('/keranjang/checkout/invoice');
+    }
+
+    public function invoice()
+    {
+        $data = session()->get('data');
+
+        return view('keranjang/invoice_view', $data);
+    }
 }
