@@ -51,7 +51,7 @@
 
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#keranjangAccordion">
           <div class="card-body overflow-auto">
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
               <thead>
                 <tr>
                   <th scope="col">No</th>
@@ -162,7 +162,11 @@
 </style>
 
 <script>
-
+  Swal.fire(
+    'Sukses!',
+    'Pembayaran Berhasil!',
+    'success'
+  )
 </script>
 
 <?= $this->endSection(); ?>

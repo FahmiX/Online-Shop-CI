@@ -51,7 +51,7 @@
 
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#keranjangAccordion">
                     <div class="card-body overflow-auto">
-                        <table class="table table-striped">
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
@@ -88,7 +88,7 @@
         </div>
         <div class="button-container">
             <a href="<?= base_url('keranjang/checkout') ?>" class="btn btn-secondary btn-lg">Kembali</a>
-            <a href="<?= base_url('keranjang/checkout/bayar') ?>" class="btn btn-success btn-lg">Bayar</a>
+            <a href="<?= base_url('keranjang/checkout/bayar') ?>" class="btn btn-success btn-lg" id="btn-bayar">Bayar</a>
         </div>
     </div>
 </div>
@@ -157,7 +157,24 @@
 </style>
 
 <script>
+    // Tambahkan event listener pada tombol Bayar
+    document.querySelector('#btn-bayar').addEventListener('click', function(event) {
+        event.preventDefault();
 
+        // Tampilkan Sweet Alert dengan opsi Yes dan No
+        Swal.fire({
+            title: 'Apakah Anda yakin ingin melanjutkan pembayaran?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            // Jika pengguna mengklik tombol Ya
+            if (result.isConfirmed) {
+                // Lakukan pengalihan ke halaman pembayaran
+                window.location.href = "<?= base_url('keranjang/checkout/bayar') ?>";
+            }
+        });
+    });
 </script>
 
 <?= $this->endSection(); ?>
