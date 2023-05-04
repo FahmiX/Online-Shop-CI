@@ -72,6 +72,16 @@
                     <?php endif; ?>
                 </div>
 
+                <!-- Kodepos -->
+                <div class="form-group">
+                    <label>Kode Pos</label>
+                    <select class="form-select" id="kode_pos" name="kode_pos" value="<?= old('kode_pos', $pembeli['kode_pos']); ?>" required>
+                        <option selected disabled>Pilih Kode Pos</option>
+                        <?php foreach ($kodepos_tujuan as $code) : ?>
+                            <option value="<?= $code['kodepos_tujuan'] ?>"><?= $code['kodepos_tujuan'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </div>
 
             <div class="card-footer">

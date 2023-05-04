@@ -31,6 +31,10 @@ class Barang extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '255',
             ],
+            'berat_barang' => [
+                'type' => 'INT',
+                'constraint' => '11',
+            ],
         ]);
 
         $this->forge->addKey('id_barang', true);

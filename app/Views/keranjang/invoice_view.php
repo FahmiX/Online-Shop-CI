@@ -6,167 +6,185 @@
 <link rel="stylesheet" type="text/css" href="/styles/keranjang_display.css">
 
 <div class="container mt-4 mb-4">
-  <h3>Invoice</h3>
+    <h3>Invoice</h3>
 
 
-  <div class="card border border-dark border-3">
-    <div class="card-body">
-      <span class="badge bg-primary">Nama</span></h1>
-      </br>
-      <span class="border border-2 border-dark bg-light"><?= $pembeli['nama'] ?></span>
-    </div>
-
-    <div class="card-body">
-      <span class="badge bg-primary">Nomor HP</span></h1>
-      </br>
-      <span class="border border-2 border-dark bg-light"><?= $pembeli['hp'] ?></span>
-    </div>
-
-    <div class="card-body">
-      <span class="badge bg-primary">Alamat</span></h1>
-      </br>
-      <span class="border border-2 border-dark bg-light"><?= $pembeli['alamat'] ?></span>
-    </div>
-
-    <div class="card-body">
-      <span class="badge bg-primary">Kecamatan</span></h1>
-      </br>
-      <span class="border border-2 border-dark bg-light"><?= $pembeli['kecamatan'] ?></span>
-    </div>
-
-    <div class="card-body">
-      <span class="badge bg-primary">Kota</span></h1>
-      </br>
-      <span class="border border-2 border-dark bg-light"><?= $pembeli['kota'] ?></span>
-    </div>
-
-    <!-- Keranjang Belanja Disini -->
-    <div class="accordion">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Produk
-          </button>
-        </h2>
-
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#keranjangAccordion">
-          <div class="card-body overflow-auto">
-            <table class="table table-striped table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">Nama Barang</th>
-                  <th scope="col">Harga</th>
-                  <th scope="col">Jumlah</th>
-                  <th scope="col">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php $i = 1; ?>
-                <?php foreach ($keranjang as $k) : ?>
-                  <tr>
-                    <th scope="row"><?= $i++; ?></th>
-                    <td><?= $k['nama_barang'] ?></td>
-                    <td>Rp<?= number_format($k['harga_barang'], 0, ',', '.') ?></td>
-                    <td><?= $k['jumlah'] ?></td>
-                    <td>Rp<?= number_format($k['jumlah'] * $k['harga_barang'], 0, ',', '.') ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
+    <div class="card border border-dark border-3">
+        <div class="card-body">
+            <span class="badge bg-primary">Nama</span></h1>
+            </br>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['nama'] ?></span>
         </div>
-      </div>
-    </div>
-    <!-- End Keranjang Belanja -->
 
-    <div class="checkout-container mt-4">
-      <div class="total-container">
-        <p>Total Harga:</p>
-        <h4><strong>Rp<span id="total-harga"><?= number_format($total, 0, ',', '.') ?></span></strong></h4>
-      </div>
-      <div class="total-container" style="text-align: right;">
-        <p>Tanggal Pembelian:</p>
-        <h4><strong><?= date('d F Y') ?></strong></h4>
-      </div>
-    </div>
-  </div>
+        <div class="card-body">
+            <span class="badge bg-primary">Nomor HP</span></h1>
+            </br>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['hp'] ?></span>
+        </div>
 
-  <!-- Button Selesai -->
-  <div class="button-container">
-    <a href="/" class="btn btn-success btn-lg">Selesai</a>
-  </div>
+        <div class="card-body">
+            <span class="badge bg-primary">Alamat</span></h1>
+            </br>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['alamat'] ?></span>
+        </div>
+
+        <div class="card-body">
+            <span class="badge bg-primary">Kecamatan</span></h1>
+            </br>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['kecamatan'] ?></span>
+        </div>
+
+        <div class="card-body">
+            <span class="badge bg-primary">Kota</span></h1>
+            </br>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['kota'] ?></span>
+        </div>
+
+        <div class="card-body">
+            <span class="badge bg-primary">Kode Pos</span></h1>
+            <span class="border border-2 border-dark bg-light"><?= $pembeli['kode_pos'] ?></span>
+        </div>
+
+        <!-- Keranjang Belanja Disini -->
+        <div class="accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Produk
+                    </button>
+                </h2>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#keranjangAccordion">
+                    <div class="card-body overflow-auto">
+                        <table class="table table-striped table-bordered">
+                        <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Nama Barang</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col">Jumlah</th>
+                                    <th scope="col">Berat</th>
+                                    <th scope="col">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 1; ?>
+                                <?php foreach ($keranjang as $k) : ?>
+                                    <tr>
+                                        <th scope="row"><?= $i++; ?></th>
+                                        <td><?= $k['nama_barang'] ?></td>
+                                        <td>Rp<?= number_format($k['harga_barang'], 0, ',', '.') ?></td>
+                                        <td><?= $k['jumlah'] ?></td>
+                                        <td><?= $k['berat_barang'] ?> gram</td>
+                                        <td>Rp<?= number_format($k['jumlah'] * $k['harga_barang'], 0, ',', '.') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <span class="badge bg-success">Jumlah Berat</span></h1>
+                        <span class="border border-2 border-1 bg-light"><?= $jumlah_berat ?> gram</span>
+                        <br>
+                        <span class="badge bg-success">Ongkos Kirim Per Kg</span></h1>
+                        <span class="border border-2 border-1 bg-light">Rp<?= number_format($ongkir, 0, ',', '.') ?></span>
+                        <br>
+                        <span class="badge bg-success">Total Biaya Ongkos Kirim</span></h1>
+                        <span class="border border-2 border-1 bg-light">Rp<?= number_format($total_ongkir, 0, ',', '.') ?></span>
+                        <br>
+                        <span class="badge bg-success">Total Biaya Produk</span></h1>
+                        <span class="border border-2 border-1 bg-light">Rp<?= number_format($total_harga_barang, 0, ',', '.') ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Keranjang Belanja -->
+
+        <div class="checkout-container mt-4">
+            <div class="total-container">
+                <p>Total Harga:</p>
+                <h4><strong>Rp<span id="total-harga"><?= number_format($total_seluruh, 0, ',', '.') ?></span></strong></h4>
+            </div>
+            <div class="total-container" style="text-align: right;">
+                <p>Tanggal Pembelian:</p>
+                <h4><strong><?= date('d F Y') ?></strong></h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button Selesai -->
+    <div class="button-container">
+        <a href="/" class="btn btn-success btn-lg">Selesai</a>
+    </div>
 
 </div>
 
 <style>
-  .card {
-    margin-top: 20px;
-  }
+    .card {
+        margin-top: 20px;
+    }
 
-  .card-header {
-    font-size: 25px;
-    font-weight: 600;
-    justify-content: center;
-  }
+    .card-header {
+        font-size: 25px;
+        font-weight: 600;
+        justify-content: center;
+    }
 
-  .badge {
-    font-size: 14px !important;
-  }
+    .badge {
+        font-size: 14px !important;
+    }
 
-  .border {
-    font-size: 14px !important;
-    margin-top: 10px;
-    padding: 5px;
-    display: block;
-  }
+    .border {
+        font-size: 14px !important;
+        margin-top: 10px;
+        padding: 5px;
+        display: block;
+    }
 
-  .back {
-    font-size: 18px;
-    margin-top: 10px;
-  }
+    .back {
+        font-size: 18px;
+        margin-top: 10px;
+    }
 
-  .accordion {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right: 15px;
-    justify-content: center;
-    padding-left: 16px;
-  }
+    .accordion {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-right: 15px;
+        justify-content: center;
+        padding-left: 16px;
+    }
 
-  .checkout-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-  }
+    .checkout-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
 
-  .total-container {
-    flex-grow: 1;
-  }
+    .total-container {
+        flex-grow: 1;
+    }
 
-  .total-container p {
-    font-size: 16px;
-    margin: 0 0 5px 0;
-  }
+    .total-container p {
+        font-size: 16px;
+        margin: 0 0 5px 0;
+    }
 
-  .total-container h4 {
-    font-size: 28px;
-    margin: 0;
-  }
+    .total-container h4 {
+        font-size: 28px;
+        margin: 0;
+    }
 
-  .button-container {
-    margin-top: 20px;
-    text-align: right;
-  }
+    .button-container {
+        margin-top: 20px;
+        text-align: right;
+    }
 </style>
 
 <script>
-  Swal.fire(
-    'Sukses!',
-    'Pembayaran Berhasil!',
-    'success'
-  )
+    Swal.fire(
+        'Sukses!',
+        'Pembayaran Berhasil!',
+        'success'
+    )
 </script>
 
 <?= $this->endSection(); ?>

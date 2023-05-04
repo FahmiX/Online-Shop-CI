@@ -23,16 +23,25 @@
                     </div>
                     <div class="card-body">
                         <table class="table table-borderless">
+                            <!-- Stok Barang -->
                             <tr class="align-middle">
-                                <td style="width: 10%; font-size:14px">Stok</td>
+                                <td style="width: 10%; font-size:14px;">Stok</td>
                                 <td>:
-                                    <span class="badge bg-success"><?= $b['stok_barang'] ?></span>
+                                    <span class="badge bg-warning content-font"><?= $b['stok_barang'] ?></span>
                                 </td>
                             </tr>
-                            <tr>
+                            <!-- Harga Barang -->
+                            <tr class="align-middle">
                                 <td style="width: 10%; font-size:14px">Harga</td>
                                 <td>:
-                                    <span class="badge bg-secondary">Rp<?= $b['harga_barang'] ?></span>
+                                    <span class="badge bg-secondary content-font">Rp<?= $b['harga_barang'] ?></span>
+                                </td>
+                            </tr>
+                            <!-- Berat Barang -->
+                            <tr class="align-middle">
+                                <td style="width: 10%; font-size:14px">Berat</td>
+                                <td>:
+                                    <span class="badge bg-secondary content-font"><?= $b['berat_barang'] ?> gram</span>
                                 </td>
                             </tr>
                         </table>
@@ -47,5 +56,13 @@
         <?php endforeach; ?>
     </div>
 </div>
+
+<style>
+    .content-font{
+        font-size: 14px;
+        color: #4C3D3D;
+        background-color: #AFD3E2 !important;
+    }
+</style>
 
 <?= $this->endSection(); ?>

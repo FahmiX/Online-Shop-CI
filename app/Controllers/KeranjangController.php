@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\BarangModel;
 use App\Models\TransaksiModel;
 use App\Models\JualModel;
+use App\Models\OngkirModel;
 
 class KeranjangController extends BaseController
 {
@@ -48,6 +49,7 @@ class KeranjangController extends BaseController
                     'gambar_barang' => $barang['gambar_barang'],
                     'nama_barang' => $barang['nama_barang'],
                     'harga_barang' => $barang['harga_barang'],
+                    'berat_barang' => $barang['berat_barang'],
                     'jumlah' => $jumlah
                 ]
             ];
@@ -62,6 +64,7 @@ class KeranjangController extends BaseController
                     'gambar_barang' => $barang['gambar_barang'],
                     'nama_barang' => $barang['nama_barang'],
                     'harga_barang' => $barang['harga_barang'],
+                    'berat_barang' => $barang['berat_barang'],
                     'jumlah' => $jumlah
                 ];
             }
@@ -119,6 +122,12 @@ class KeranjangController extends BaseController
             $total += $k['jumlah'] * $k['harga_barang'];
         }
 
+        // Hitung total berat keranjang
+        $berat = 0;
+        foreach ($keranjang as $k) {
+            $berat += $k['jumlah'] * $k['berat_barang'];
+        }
+
         // Update session keranjang
         session()->set('keranjang', $keranjang);
 
@@ -132,7 +141,8 @@ class KeranjangController extends BaseController
             'message' => $message,
             'total' => $total,
             'jumlah' => $barang['jumlah'],
-            'subtotal' => $subtotal
+            'subtotal' => $subtotal,
+            'berat' => $berat
         ];
 
         return $this->response->setJSON($response);
@@ -150,17 +160,81 @@ class KeranjangController extends BaseController
         // Ambil data identitas pembeli dari session jika sudah ada
         if (session()->has('pembeli')) {
             $pembeli = session()->get('pembeli');
+
+            $ongkir = new OngkirModel();
+
+            // Ambil seluruh data kode pos tujuan dari database
+            $kodepos_tujuan = $ongkir->getKodeposTujuan();
+
+            $data = [
+                'pembeli' => $pembeli,
+                'kodepos_tujuan' => $kodepos_tujuan
+            ];
+
+            // Validasi data pembeli
+            if (!$this->validate([
+                'pembeli.nama' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama pembeli harus diisi.'
+                    ]
+                ],
+                'pembeli.hp' => [
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => 'Nomor HP pembeli harus diisi.',
+                        'numeric' => 'Nomor HP pembeli harus berupa angka.'
+                    ]
+                ],
+                'pembeli.alamat' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Alamat pembeli harus diisi.'
+                    ]
+                ],
+                'pembeli.kecamatan' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Kecamatan pembeli harus diisi.'
+                    ]
+                ],
+                'pembeli.kota' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Kota pembeli harus diisi.'
+                    ]
+                ],
+                'pembeli.kode_pos' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Kode pos pembeli harus diisi.'
+                    ]
+                ]
+            ])) {
+                return view('keranjang/checkout_view', $data);
+            }
         } else {
             $pembeli = [
                 'nama' => '',
                 'hp' => '',
                 'alamat' => '',
                 'kecamatan' => '',
-                'kota' => ''
+                'kota' => '',
+                'kode_pos' => '',
+            ];
+
+            $ongkir = new OngkirModel();
+
+            // Ambil seluruh data kode pos tujuan dari database
+            $kodepos_tujuan = $ongkir->getKodeposTujuan();
+
+            $data = [
+                'pembeli' => $pembeli,
+                'kodepos_tujuan' => $kodepos_tujuan
             ];
         }
 
-        return view('keranjang/checkout_view', ['pembeli' => $pembeli]);
+        return view('keranjang/checkout_view', $data);
     }
 
     public function preview()
@@ -180,7 +254,8 @@ class KeranjangController extends BaseController
             'hp' => $this->request->getVar('hp'),
             'alamat' => $this->request->getVar('alamat'),
             'kecamatan' => $this->request->getVar('kecamatan'),
-            'kota' => $this->request->getVar('kota')
+            'kota' => $this->request->getVar('kota'),
+            'kode_pos' => $this->request->getVar('kode_pos'),
         ];
 
         // Validasi data identitas pembeli
@@ -189,7 +264,8 @@ class KeranjangController extends BaseController
             'hp' => 'required',
             'alamat' => 'required',
             'kecamatan' => 'required',
-            'kota' => 'required'
+            'kota' => 'required',
+            'kode_pos' => 'required',
         ];
 
         if (!$this->validate($validationRules)) {
@@ -201,14 +277,44 @@ class KeranjangController extends BaseController
         // Jika identitas pembeli valid, maka masukkan data pembeli ke session
         session()->set('pembeli', $pembeli);
 
-        // Tambahkan total harga 
-        $total = 0;
+        // Ambil data harga ongkos kirim berdasarkan kode pos tujuan
+        $ongkir = new OngkirModel();
+        $ongkir = $ongkir->getHargaByTujuan($pembeli['kode_pos']);
+
+        // Hitung total berat barang
+        $jumlah_berat = 0;
         foreach ($keranjang as $k) {
-            $total += $k['jumlah'] * $k['harga_barang'];
+            $jumlah_berat += $k['jumlah'] * $k['berat_barang'];
         }
 
+        // Hitung total harga barang
+        $total_harga_barang = 0;
+        foreach ($keranjang as $k) {
+            $total_harga_barang += $k['jumlah'] * $k['harga_barang'];
+        }
+
+        // Hitung total harga ongkos kirim setiap kilogram
+        $jumlah_berat_kg = round($jumlah_berat / 1000);
+        if ($jumlah_berat_kg == 0) {
+            $jumlah_berat_kg = 1;
+        }
+        $total_ongkir = $jumlah_berat_kg * $ongkir;
+
+        // Hitung total harga keseluruhan
+        $total_seluruh = $total_harga_barang + $total_ongkir;
+
+        $data = [
+            'keranjang' => $keranjang,
+            'pembeli' => $pembeli,
+            'ongkir' => $ongkir,
+            'jumlah_berat' => $jumlah_berat,
+            'total_harga_barang' => $total_harga_barang,
+            'total_ongkir' => $total_ongkir,
+            'total_seluruh' => $total_seluruh
+        ];
+
         // Jika data keranjang dan identitas pembeli valid, lanjutkan ke halaman preview dengan data pembeli
-        return view('keranjang/preview_view', ['keranjang' => $keranjang, 'pembeli' => $pembeli, 'total' => $total]);
+        return view('keranjang/preview_view', $data);
     }
 
     public function bayar()
@@ -231,11 +337,31 @@ class KeranjangController extends BaseController
             return redirect()->to('/keranjang/checkout');
         }
 
-        // Tambahkan total harga
-        $total = 0;
+        // Ambil data harga ongkos kirim berdasarkan kode pos tujuan
+        $ongkir = new OngkirModel();
+        $ongkir = $ongkir->getHargaByTujuan($pembeli['kode_pos']);
+
+        // Hitung total berat barang
+        $jumlah_berat = 0;
         foreach ($keranjang as $k) {
-            $total += $k['jumlah'] * $k['harga_barang'];
+            $jumlah_berat += $k['jumlah'] * $k['berat_barang'];
         }
+
+        // Hitung total harga barang
+        $total_harga_barang = 0;
+        foreach ($keranjang as $k) {
+            $total_harga_barang += $k['jumlah'] * $k['harga_barang'];
+        }
+
+        // Hitung total harga ongkos kirim setiap kilogram
+        $jumlah_berat_kg = round($jumlah_berat / 1000);
+        if ($jumlah_berat_kg == 0) {
+            $jumlah_berat_kg = 1;
+        }
+        $total_ongkir = $jumlah_berat_kg * $ongkir;
+
+        // Hitung total harga keseluruhan
+        $total_seluruh = $total_harga_barang + $total_ongkir;
 
         // Simpan data transaksi ke database
         $transaksi = new TransaksiModel();
@@ -248,7 +374,7 @@ class KeranjangController extends BaseController
             'alamat' => $pembeli['alamat'],
             'kecamatan' => $pembeli['kecamatan'],
             'kota' => $pembeli['kota'],
-            'total_transaksi' => $total
+            'total_transaksi' => $total_seluruh
         ];
 
         // Simpan data transaksi dan dapatkan id_transaksi
@@ -282,7 +408,11 @@ class KeranjangController extends BaseController
         $data = [
             'keranjang' => $keranjang,
             'pembeli' => $pembeli,
-            'total' => $total
+            'ongkir' => $ongkir,
+            'jumlah_berat' => $jumlah_berat,
+            'total_harga_barang' => $total_harga_barang,
+            'total_ongkir' => $total_ongkir,
+            'total_seluruh' => $total_seluruh
         ];
 
         session()->set('data', $data);

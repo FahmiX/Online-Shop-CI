@@ -4,16 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class BarangModel extends Model
+class OngkirModel extends Model
 {
-    protected $table            = 'barang';
-    protected $primaryKey       = 'id_barang';
+    protected $table            = 'ongkir';
+    protected $primaryKey       = 'id_ongkir';
     protected $useAutoIncrement = true;
-    protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['id_ongkir', 'kodepos_awal', 'kodepos_tujuan', 'harga_ongkir'];
 
     // Dates
     protected $useTimestamps = false;
@@ -39,13 +38,16 @@ class BarangModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getAllBarang()
+    // FUNCTION
+
+    // Get All Ongkir
+    public function getAllOngkir()
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("SELECT * FROM barang");
+        $query = $db->query("SELECT * FROM ongkir");
 
         // Close Connection
         $db->close();
@@ -54,52 +56,35 @@ class BarangModel extends Model
         return $query->getResultArray();
     }
 
-    public function getBarang($id_barang)
+    // Get Kode Pos Tujuan
+    public function getKodePosTujuan()
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("SELECT * FROM barang WHERE id_barang = $id_barang");
+        $query = $db->query("SELECT DISTINCT kodepos_tujuan FROM ongkir");
 
         // Close Connection
         $db->close();
 
         // Return result
-        return $query->getRowArray();
+        return $query->getResultArray();
     }
 
-    public function createBarang($data)
-    {
-        // Connect to database
-        $db = db_connect();
-
-        // set ID
-        $id_barang = $db->query("SELECT MAX(id_barang) AS id_barang FROM barang")->getRowArray()['id_barang'] + 1;
-
-        // Query
-        // id_barang, nama_barang, stok_barang, harga_barang, gambar_barang, berat_barang
-        $query = $db->query("INSERT INTO barang VALUES ($id_barang, '$data[nama_barang]', $data[stok_barang], $data[harga_barang], '$data[gambar_barang]', $data[berat_barang])");
-
-        // Close Connection
-        $db->close();
-
-        // Return result
-        return $query;
-    }
-
-    public function kurangiStok($id_barang, $jumlah)
+    // Get Harga Ongkir by Kode Pos Tujuan
+    public function getHargaByTujuan($kodepos_tujuan)
     {
         // Connect to database
         $db = db_connect();
 
         // Query
-        $query = $db->query("UPDATE barang SET stok_barang = stok_barang - $jumlah WHERE id_barang = $id_barang");
+        $query = $db->query("SELECT DISTINCT harga_ongkir FROM ongkir WHERE kodepos_tujuan = '$kodepos_tujuan'");
 
-        // Close Connection
-        $db->close();
+        // Get one row result
+        $row = $query->getRow();
 
-        // Return result
-        return $query;
+        // Return result as integer
+        return intval($row->harga_ongkir);
     }
 }

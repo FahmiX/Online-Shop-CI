@@ -22,6 +22,7 @@
                 <th>Gambar</th>
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
+                <th>Berat</th>
                 <th>Harga Satuan</th>
                 <th>Subtotal Harga</th>
                 <th>Aksi</th>
@@ -32,11 +33,15 @@
             $total = 0; ?>
             <?php foreach ($keranjang as $k) : ?>
                 <tr class="align-middle">
+                    <!-- No -->
                     <td style="text-align: center; width: 50px;"><?= $no++ ?></td>
+                    <!-- Gambar Barang -->
                     <td style="width: 150px">
                         <img src="<?= base_url('barang/' . $k['gambar_barang']) ?>" class="img-medium" alt="gambar barang">
                     </td>
+                    <!-- Nama Barang -->
                     <td><?= $k['nama_barang'] ?></td>
+                    <!-- Jumlah Barang -->
                     <td style="width: 180px">
                         <div class="input-group">
                             <button class="btn btn-outline-secondary btn-kurang" type="button" data-id="<?= $k['id_barang'] ?>" data-action="kurang">-</button>
@@ -44,7 +49,11 @@
                             <button class="btn btn-outline-secondary btn-tambah" type="button" data-id="<?= $k['id_barang'] ?>" data-action="tambah">+</button>
                         </div>
                     </td>
+                    <!-- Berat Barang (berat * jumlah)-->
+                    <td id="berat<?= $k['id_barang'] ?>"><?= $k['berat_barang'] * $k['jumlah'] ?> gram</td>
+                    <!-- Harga Satuan -->
                     <td>Rp<?= number_format($k['harga_barang'], 0, ',', '.') ?></td>
+                    <!-- Subtotal Harga -->
                     <td id="subtotal-harga-<?= $k['id_barang'] ?>">Rp<?= number_format($k['jumlah'] * $k['harga_barang'], 0, ',', '.') ?></td>
                     <td style="width: 50px">
                         <a href="<?= base_url('keranjang/hapus/' . $k['id_barang']) ?>" class="btn btn-danger btn-sm">Hapus</a>
@@ -110,9 +119,10 @@
                     action: action,
                 },
                 success: function(response) {
-                    // Update tampilan jumlah dan total harga
+                    // Update tampilan jumlah, total berat keranjang, dan subtotal harga
                     $('input[name="jumlah"][data-id="' + id + '"]').val(response.jumlah);
                     $('#subtotal-harga-' + id).html('Rp' + response.subtotal);
+                    $('#berat' + id).html(response.berat + ' gram');
                     $('#total-harga').text(response.total);
                 },
                 error: function(xhr, status, error) {

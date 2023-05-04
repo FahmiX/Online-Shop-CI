@@ -32,6 +32,7 @@ class BarangController extends BaseController
             'nama_barang' => $this->request->getPost('nama_barang'),
             'harga_barang' => $this->request->getPost('harga_barang'),
             'stok_barang' => $this->request->getPost('stok_barang'),
+            'berat_barang' => $this->request->getPost('berat_barang'),
         ];
 
         // Mengambil file yang di-upload

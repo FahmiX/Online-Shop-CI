@@ -52,6 +52,18 @@
                             <?php endif; ?>
                         </div>
 
+                        <!-- Berat Barang -->
+                        <div class="form-group">
+                            <label>Berat Barang</label>
+                            <input type="number" class="form-control <?= isset($validation) && $validation->hasError('berat_barang') ? 'is-invalid' : ''; ?>" name="berat_barang" value="<?= old('berat_barang'); ?>">
+                            <?php if (isset($validation) && $validation->hasError('berat_barang')) : ?>
+                                <div class="invalid-feedback">
+                                    <?= $validation->getError('berat_barang'); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Gambar Barang -->
                         <div class="form-group">
                             <label>Gambar Barang</label>
                             <input type="file" class="form-control <?= isset($validation) && $validation->hasError('gambar_barang') ? 'is-invalid' : ''; ?>" name="gambar_barang" id="gambar_barang" accept="image/*">
