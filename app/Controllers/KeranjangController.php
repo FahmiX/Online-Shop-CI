@@ -122,11 +122,8 @@ class KeranjangController extends BaseController
             $total += $k['jumlah'] * $k['harga_barang'];
         }
 
-        // Hitung total berat keranjang
-        $berat = 0;
-        foreach ($keranjang as $k) {
-            $berat += $k['jumlah'] * $k['berat_barang'];
-        }
+        // Hitung total berat keranjang pada id tersebut
+        $barang['berat'] = $barang['berat_barang'] * $barang['jumlah'];
 
         // Update session keranjang
         session()->set('keranjang', $keranjang);
@@ -142,7 +139,7 @@ class KeranjangController extends BaseController
             'total' => $total,
             'jumlah' => $barang['jumlah'],
             'subtotal' => $subtotal,
-            'berat' => $berat
+            'berat' => $barang['berat']
         ];
 
         return $this->response->setJSON($response);
@@ -294,9 +291,24 @@ class KeranjangController extends BaseController
         }
 
         // Hitung total harga ongkos kirim setiap kilogram
-        $jumlah_berat_kg = round($jumlah_berat / 1000);
-        if ($jumlah_berat_kg == 0) {
+        $jumlah_berat_kg = $jumlah_berat / 1000;
+        if ($jumlah_berat_kg < 1) {
             $jumlah_berat_kg = 1;
+        } else {
+            // Memisahkan bilangan di kedua sisi desimal
+            $jumlah_berat_array = explode('.', $jumlah_berat_kg);
+
+            // mengambil angka dibelakang koma
+            $angka = isset($jumlah_berat_array[1]) ? $jumlah_berat_array[1] : 0;
+
+            // Cek kondisi
+            if ($angka <= 3) {
+                // Dibulatkan kebawah
+                $jumlah_berat_kg = floor($jumlah_berat_kg);
+            } else {
+                // Dibulatkan keatas
+                $jumlah_berat_kg = ceil($jumlah_berat_kg);
+            }
         }
         $total_ongkir = $jumlah_berat_kg * $ongkir;
 
@@ -354,9 +366,24 @@ class KeranjangController extends BaseController
         }
 
         // Hitung total harga ongkos kirim setiap kilogram
-        $jumlah_berat_kg = round($jumlah_berat / 1000);
-        if ($jumlah_berat_kg == 0) {
+        $jumlah_berat_kg = $jumlah_berat / 1000;
+        if ($jumlah_berat_kg < 1) {
             $jumlah_berat_kg = 1;
+        } else {
+            // Memisahkan bilangan di kedua sisi desimal
+            $jumlah_berat_array = explode('.', $jumlah_berat_kg);
+
+            // mengambil angka dibelakang koma
+            $angka = isset($jumlah_berat_array[1]) ? $jumlah_berat_array[1] : 0;
+
+            // Cek kondisi
+            if ($angka <= 3) {
+                // Dibulatkan kebawah
+                $jumlah_berat_kg = floor($jumlah_berat_kg);
+            } else {
+                // Dibulatkan keatas
+                $jumlah_berat_kg = ceil($jumlah_berat_kg);
+            }
         }
         $total_ongkir = $jumlah_berat_kg * $ongkir;
 
